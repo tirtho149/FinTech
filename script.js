@@ -5,7 +5,7 @@ document.getElementById('interviewForm').addEventListener('submit', function(eve
     let participant = document.getElementById('participant').value.trim();
 
     // Load JSON data (replace with your actual JSON file path)
-    fetch('MITdataset/interviewScoreRoy.json') // Adjust the path to your JSON file
+    fetch('interviewScoreRoy.json') // Adjust the path to your JSON file
         .then(response => response.json())
         .then(data => {
             // Check if participant ID exists in JSON data
