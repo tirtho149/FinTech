@@ -1,60 +1,71 @@
-// Function to load and display data from Excel
-function loadDataFromExcel(participantName) {
-    const fileInput = document.getElementById('FinTechLLMmitCSV - Copy.xlsx'); // Assuming you have an input for file upload
-    const file = fileInput.files[0];
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        // Assuming sheet names are 'GroundTruth' and 'GPT-4o'
-        const groundTruthSheet = workbook.Sheets['GroundTruth'];
-        const gpt4oSheet = workbook.Sheets['GPT-4o'];
-
-        // Extract data from sheets
-        const groundTruthData = XLSX.utils.sheet_to_json(groundTruthSheet, { header: 1 });
-        const gpt4oData = XLSX.utils.sheet_to_json(gpt4oSheet, { header: 1 });
-
-        // Find participant in each sheet
-        let groundTruthParticipantData = findParticipantData(groundTruthData, participantName);
-        let gpt4oParticipantData = findParticipantData(gpt4oData, participantName);
-
-        // Display data in tables
-        displayParticipantData('groundTruthBody', groundTruthParticipantData);
-        displayParticipantData('gpt4oBody', gpt4oParticipantData);
-    };
-
-    reader.readAsArrayBuffer(file);
-}
-
-// Function to find participant data by name
-function findParticipantData(sheetData, participantName) {
-    // Assuming participantName is in the first column (index 0) of the sheet
-    return sheetData.find(row => row[0] === participantName);
-}
-
-// Function to display participant data in a table
-function displayParticipantData(tableId, participantData) {
-    const tableBody = document.getElementById(tableId);
-    if (!participantData) {
-        tableBody.innerHTML = '<tr><td colspan="17">Participant not found</td></tr>';
-        return;
-    }
-
-    const dataRow = document.createElement('tr');
-    for (let i = 0; i < participantData.length; i++) {
-        const cell = document.createElement('td');
-        cell.textContent = participantData[i];
-        dataRow.appendChild(cell);
-    }
-    tableBody.innerHTML = '';
-    tableBody.appendChild(dataRow);
-}
-
-// Handle form submission
 document.getElementById('participantForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const participantName = document.getElementById('participantName').value.trim();
-    loadDataFromExcel(participantName);
+
+    let participantName = document.getElementById('participantName').value.trim();
+
+    // Fetch ground truth ratings
+    fetch('GroundTruth.json')  // Replace with your actual JSON file path for ground truth ratings
+        .then(response => response.json())
+        .then(data => {
+            // Find participant ratings in ground truth data
+            let participantData = data.find(entry => entry.Participant === participantName);
+
+            if (participantData) {
+                populateTable(participantData, 'groundTruthBody');
+            } else {
+                console.log(`Ground truth ratings for participant ${participantName} not found.`);
+                // Handle case where participant's ground truth ratings are not found
+                clearTable('groundTruthBody');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading ground truth ratings:', error);
+            // Handle errors loading ground truth ratings
+        });
+
+    // Fetch GPT-4o ratings
+    fetch('GPT-4o.json')  // Replace with your actual JSON file path for GPT-4o generated ratings
+        .then(response => response.json())
+        .then(data => {
+            // Find participant ratings in GPT-4o data
+            let participantData = data.find(entry => entry.Participant === participantName);
+
+            if (participantData) {
+                populateTable(participantData, 'gpt4oBody');
+            } else {
+                console.log(`GPT-4o ratings for participant ${participantName} not found.`);
+                // Handle case where participant's GPT-4o ratings are not found
+                clearTable('gpt4oBody');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading GPT-4o ratings:', error);
+            // Handle errors loading GPT-4o ratings
+        });
 });
+
+function populateTable(data, tableBodyId) {
+    let tableBody = document.getElementById(tableBodyId);
+    tableBody.innerHTML = '';  // Clear previous content
+
+    // Create row for participant name
+    let participantRow = tableBody.insertRow();
+    let participantCell = participantRow.insertCell();
+    participantCell.textContent = data['Participant'];
+
+    // Create rows for each rating category
+    Object.keys(data).forEach(key => {
+        if (key !== 'Participant') {
+            let row = tableBody.insertRow();
+            let categoryCell = row.insertCell();
+            categoryCell.textContent = key;
+            let ratingCell = row.insertCell();
+            ratingCell.textContent = data[key];
+        }
+    });
+}
+
+function clearTable(tableBodyId) {
+    let tableBody = document.getElementById(tableBodyId);
+    tableBody.innerHTML = '';  // Clear table content
+}
