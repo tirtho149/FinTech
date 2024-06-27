@@ -1,6 +1,6 @@
 // Function to load and display data from Excel
 function loadDataFromExcel(participantName) {
-    const fileInput = document.getElementById('excelFile'); // Assuming you have an input for file upload
+    const fileInput = document.getElementById('FinTechLLMmitCSV - Copy.xlsx'); // Assuming you have an input for file upload
     const file = fileInput.files[0];
 
     const reader = new FileReader();
