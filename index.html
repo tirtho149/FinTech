@@ -11,8 +11,6 @@
     <h1>Conversation Viewer</h1>
     <label for="participant">Participant Name:</label>
     <input type="text" id="participant" placeholder="Enter participant name">
-    <label for="year">Year:</label>
-    <input type="text" id="year" placeholder="Enter year">
     <button onclick="loadConversation()">Load Conversation</button>
 
     <div id="conversation" class="conversation">
@@ -22,6 +20,9 @@
     <div id="traits" class="traits">
       <!-- Traits and rating inputs will be loaded here -->
     </div>
+
+    <button onclick="saveRatings()">Save Ratings</button>
+    <div id="successMessage" class="success-message"></div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
