@@ -1,71 +1,115 @@
 document.getElementById('participantForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
+    // Get participant name
     let participantName = document.getElementById('participantName').value.trim();
 
-    // Fetch ground truth ratings
-    fetch('GroundTruth.json')  // Replace with your actual JSON file path for ground truth ratings
+    // Fetch Ground Truth Ratings
+    fetch('MITdataset/groundTruthRatings.json') // Adjust the path to your JSON file
         .then(response => response.json())
         .then(data => {
-            // Find participant ratings in ground truth data
-            let participantData = data.find(entry => entry.Participant === participantName);
+            // Check if participant exists in ground truth ratings
+            if (participantName in data) {
+                let ratings = data[participantName];
 
-            if (participantData) {
-                populateTable(participantData, 'groundTruthBody');
+                // Populate Ground Truth Table
+                let groundTruthBody = document.getElementById('groundTruthBody');
+                groundTruthBody.innerHTML = ''; // Clear previous data
+
+                let groundTruthRow = document.createElement('tr');
+                groundTruthRow.innerHTML = `
+                    <td>${participantName}</td>
+                    <td>${ratings['Overall']}</td>
+                    <td>${ratings['Recommend Hiring']}</td>
+                    <td>${ratings['Engaged']}</td>
+                    <td>${ratings['Excited']}</td>
+                    <td>${ratings['Eye Contact']}</td>
+                    <td>${ratings['Smiled']}</td>
+                    <td>${ratings['Friendly']}</td>
+                    <td>${ratings['Speaking Rate']}</td>
+                    <td>${ratings['No Fillers']}</td>
+                    <td>${ratings['Paused']}</td>
+                    <td>${ratings['Authentic']}</td>
+                    <td>${ratings['Calm']}</td>
+                    <td>${ratings['Focused']}</td>
+                    <td>${ratings['Structured Answers']}</td>
+                    <td>${ratings['Not Stressed']}</td>
+                    <td>${ratings['Not Awkward']}</td>
+                `;
+                groundTruthBody.appendChild(groundTruthRow);
+
+                // Display Ground Truth Ratings Digits
+                displayDigits(ratings, 'groundTruthDigits');
+
             } else {
-                console.log(`Ground truth ratings for participant ${participantName} not found.`);
-                // Handle case where participant's ground truth ratings are not found
-                clearTable('groundTruthBody');
+                console.log(`Participant ${participantName} not found in ground truth ratings.`);
+                // Handle case where participant is not found
             }
         })
         .catch(error => {
             console.error('Error loading ground truth ratings:', error);
-            // Handle errors loading ground truth ratings
+            // Handle errors loading JSON file
         });
 
-    // Fetch GPT-4o ratings
-    fetch('GPT-4o.json')  // Replace with your actual JSON file path for GPT-4o generated ratings
+    // Fetch GPT-4o Ratings
+    fetch('MITdataset/gpt4oRatings.json') // Adjust the path to your JSON file
         .then(response => response.json())
         .then(data => {
-            // Find participant ratings in GPT-4o data
-            let participantData = data.find(entry => entry.Participant === participantName);
+            // Check if participant exists in GPT-4o ratings
+            if (participantName in data) {
+                let ratings = data[participantName];
 
-            if (participantData) {
-                populateTable(participantData, 'gpt4oBody');
+                // Populate GPT-4o Table
+                let gpt4oBody = document.getElementById('gpt4oBody');
+                gpt4oBody.innerHTML = ''; // Clear previous data
+
+                let gpt4oRow = document.createElement('tr');
+                gpt4oRow.innerHTML = `
+                    <td>${participantName}</td>
+                    <td>${ratings['Overall']}</td>
+                    <td>${ratings['Recommend Hiring']}</td>
+                    <td>${ratings['Engaged']}</td>
+                    <td>${ratings['Excited']}</td>
+                    <td>${ratings['Eye Contact']}</td>
+                    <td>${ratings['Smiled']}</td>
+                    <td>${ratings['Friendly']}</td>
+                    <td>${ratings['Speaking Rate']}</td>
+                    <td>${ratings['No Fillers']}</td>
+                    <td>${ratings['Paused']}</td>
+                    <td>${ratings['Authentic']}</td>
+                    <td>${ratings['Calm']}</td>
+                    <td>${ratings['Focused']}</td>
+                    <td>${ratings['Structured Answers']}</td>
+                    <td>${ratings['Not Stressed']}</td>
+                    <td>${ratings['Not Awkward']}</td>
+                `;
+                gpt4oBody.appendChild(gpt4oRow);
+
+                // Display GPT-4o Ratings Digits
+                displayDigits(ratings, 'gpt4oDigits');
+
             } else {
-                console.log(`GPT-4o ratings for participant ${participantName} not found.`);
-                // Handle case where participant's GPT-4o ratings are not found
-                clearTable('gpt4oBody');
+                console.log(`Participant ${participantName} not found in GPT-4o ratings.`);
+                // Handle case where participant is not found
             }
         })
         .catch(error => {
             console.error('Error loading GPT-4o ratings:', error);
-            // Handle errors loading GPT-4o ratings
+            // Handle errors loading JSON file
         });
 });
 
-function populateTable(data, tableBodyId) {
-    let tableBody = document.getElementById(tableBodyId);
-    tableBody.innerHTML = '';  // Clear previous content
+// Function to display individual score digits
+function displayDigits(ratings, containerId) {
+    let digitsContainer = document.getElementById(containerId);
+    digitsContainer.innerHTML = ''; // Clear previous data
 
-    // Create row for participant name
-    let participantRow = tableBody.insertRow();
-    let participantCell = participantRow.insertCell();
-    participantCell.textContent = data['Participant'];
-
-    // Create rows for each rating category
-    Object.keys(data).forEach(key => {
+    Object.keys(ratings).forEach(key => {
         if (key !== 'Participant') {
-            let row = tableBody.insertRow();
-            let categoryCell = row.insertCell();
-            categoryCell.textContent = key;
-            let ratingCell = row.insertCell();
-            ratingCell.textContent = data[key];
+            let digitDiv = document.createElement('div');
+            digitDiv.classList.add('score-digit');
+            digitDiv.textContent = ratings[key];
+            digitsContainer.appendChild(digitDiv);
         }
     });
-}
-
-function clearTable(tableBodyId) {
-    let tableBody = document.getElementById(tableBodyId);
-    tableBody.innerHTML = '';  // Clear table content
 }
