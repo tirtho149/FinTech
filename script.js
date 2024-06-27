@@ -30,7 +30,7 @@ function loadDataFromExcel(participantName) {
 
 // Function to find participant data by name
 function findParticipantData(sheetData, participantName) {
-    // Assuming participantName is in the first column (index 0)
+    // Assuming participantName is in the first column (index 0) of the sheet
     return sheetData.find(row => row[0] === participantName);
 }
 
