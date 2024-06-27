@@ -3,63 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Scores Input</title>
+    <title>Participant Ratings</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <form id="interviewForm">
-        <label for="participant">Participant ID:</label>
-        <input type="text" id="participant" name="participant" required><br><br>
-        
-        <label for="overallRating">Overall Rating:</label>
-        <input type="number" id="overallRating" name="overallRating"><br><br>
-
-        <label for="recommendHiring">Recommend Hiring:</label>
-        <input type="number" id="recommendHiring" name="recommendHiring"><br><br>
-
-        <label for="engagement">Engagement:</label>
-        <input type="number" id="engagement" name="engagement"><br><br>
-
-        <label for="excitement">Excitement:</label>
-        <input type="number" id="excitement" name="excitement"><br><br>
-
-        <label for="eyeContact">Eye Contact:</label>
-        <input type="number" id="eyeContact" name="eyeContact"><br><br>
-
-        <label for="smile">Smile:</label>
-        <input type="number" id="smile" name="smile"><br><br>
-
-        <label for="friendliness">Friendliness:</label>
-        <input type="number" id="friendliness" name="friendliness"><br><br>
-
-        <label for="speakingRate">Speaking Rate:</label>
-        <input type="number" id="speakingRate" name="speakingRate"><br><br>
-
-        <label for="noFillers">No Fillers:</label>
-        <input type="number" id="noFillers" name="noFillers"><br><br>
-
-        <label for="paused">Paused:</label>
-        <input type="number" id="paused" name="paused"><br><br>
-
-        <label for="authentic">Authentic:</label>
-        <input type="number" id="authentic" name="authentic"><br><br>
-
-        <label for="calm">Calm:</label>
-        <input type="number" id="calm" name="calm"><br><br>
-
-        <label for="focused">Focused:</label>
-        <input type="number" id="focused" name="focused"><br><br>
-
-        <label for="structuredAnswers">Structured Answers:</label>
-        <input type="number" id="structuredAnswers" name="structuredAnswers"><br><br>
-
-        <label for="notStressed">Not Stressed:</label>
-        <input type="number" id="notStressed" name="notStressed"><br><br>
-
-        <label for="notAwkward">Not Awkward:</label>
-        <input type="number" id="notAwkward" name="notAwkward"><br><br>
-
-        <input type="submit" value="Submit">
+    <h2>Participant Ratings</h2>
+    <form id="participantForm">
+        <label for="participantName">Participant Name:</label>
+        <input type="text" id="participantName" name="participantName" required>
+        <button type="submit">Get Ratings</button>
     </form>
+
+    <h3>Ground Truth Ratings</h3>
+    <table id="groundTruthTable">
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Overall</th>
+                <th>Recommend Hiring</th>
+                <th>Engaged</th>
+                <th>Excited</th>
+                <th>Eye Contact</th>
+                <th>Smiled</th>
+                <th>Friendly</th>
+                <th>Speaking Rate</th>
+                <th>No Fillers</th>
+                <th>Paused</th>
+                <th>Authentic</th>
+                <th>Calm</th>
+                <th>Focused</th>
+                <th>Structured Answers</th>
+                <th>Not Stressed</th>
+                <th>Not Awkward</th>
+            </tr>
+        </thead>
+        <tbody id="groundTruthBody"></tbody>
+    </table>
+
+    <h3>GPT-4o Ratings</h3>
+    <table id="gpt4oTable">
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Overall</th>
+                <th>Recommend Hiring</th>
+                <th>Engaged</th>
+                <th>Excited</th>
+                <th>Eye Contact</th>
+                <th>Smiled</th>
+                <th>Friendly</th>
+                <th>Speaking Rate</th>
+                <th>No Fillers</th>
+                <th>Paused</th>
+                <th>Authentic</th>
+                <th>Calm</th>
+                <th>Focused</th>
+                <th>Structured Answers</th>
+                <th>Not Stressed</th>
+                <th>Not Awkward</th>
+            </tr>
+        </thead>
+        <tbody id="gpt4oBody"></tbody>
+    </table>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
