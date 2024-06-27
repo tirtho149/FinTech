@@ -1,87 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Participant Ratings</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversation Viewer</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h2>Participant Ratings</h2>
+  <div class="container">
+    <h1>Conversation Viewer</h1>
+    <label for="participant">Participant Name:</label>
+    <input type="text" id="participant" placeholder="Enter participant name">
+    <label for="year">Year:</label>
+    <input type="text" id="year" placeholder="Enter year">
+    <button onclick="loadConversation()">Load Conversation</button>
 
-    <h3>Ground Truth Ratings</h3>
-    <table id="groundTruthTable">
-        <thead>
-            <tr>
-                <th>Participant</th>
-                <th>Overall</th>
-                <th>Recommend Hiring</th>
-                <th>Colleague</th>
-                <th>Engaged</th>
-                <th>Excited</th>
-                <th>Eye Contact</th>
-                <th>Smiled</th>
-                <th>Speaking Rate</th>
-                <th>No Fillers</th>
-                <th>Friendly</th>
-                <th>Paused</th>
-                <th>Engaging Tone</th>
-                <th>Structured Answers</th>
-                <th>Calm</th>
-                <th>Not Stressed</th>
-                <th>Focused</th>
-                <th>Authentic</th>
-                <th>Not Awkward</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody id="groundTruthBody">
-            <!-- Data will be dynamically populated here -->
-        </tbody>
-    </table>
+    <div id="conversation" class="conversation">
+      <!-- Conversation will be loaded here -->
+    </div>
 
-    <h3>GPT-4o Ratings</h3>
-    <table id="gpt4oTable">
-        <thead>
-            <tr>
-                <th>Participant</th>
-                <th>Overall</th>
-                <th>Recommend Hiring</th>
-                <th>Colleague</th>
-                <th>Engaged</th>
-                <th>Excited</th>
-                <th>Eye Contact</th>
-                <th>Smiled</th>
-                <th>Speaking Rate</th>
-                <th>No Fillers</th>
-                <th>Friendly</th>
-                <th>Paused</th>
-                <th>Engaging Tone</th>
-                <th>Structured Answers</th>
-                <th>Calm</th>
-                <th>Not Stressed</th>
-                <th>Focused</th>
-                <th>Authentic</th>
-                <th>Not Awkward</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody id="gpt4oBody">
-            <!-- Data will be dynamically populated here -->
-        </tbody>
-    </table>
+    <div id="traits" class="traits">
+      <!-- Traits and rating inputs will be loaded here -->
+    </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
