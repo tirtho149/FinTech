@@ -5,11 +5,11 @@ document.getElementById('participantForm').addEventListener('submit', function(e
     let participantName = document.getElementById('participantName').value.trim();
 
     // Fetch Ground Truth Ratings
-    fetch('GroundTruth.json') // Adjust the path to your JSON file
+    fetch('MITdataset/groundTruthRatings.json') // Adjust the path to your JSON file
         .then(response => response.json())
         .then(groundTruthData => {
             // Fetch GPT-4o Ratings
-            fetch('GPT-4o.json') // Adjust the path to your JSON file
+            fetch('MITdataset/gpt4oRatings.json') // Adjust the path to your JSON file
                 .then(response => response.json())
                 .then(gpt4oData => {
                     // Process data for the participant
@@ -50,32 +50,28 @@ function populateTable(ratings, tableId, digitsContainerId) {
         <td>${ratings['Participant']}</td>
         <td>${ratings['Overall']}</td>
         <td>${ratings['Recommend Hiring']}</td>
+        <td>${ratings['Colleague']}</td>
         <td>${ratings['Engaged']}</td>
         <td>${ratings['Excited']}</td>
         <td>${ratings['Eye Contact']}</td>
         <td>${ratings['Smiled']}</td>
-        <td>${ratings['Friendly']}</td>
         <td>${ratings['Speaking Rate']}</td>
         <td>${ratings['No Fillers']}</td>
+        <td>${ratings['Friendly']}</td>
         <td>${ratings['Paused']}</td>
-        <td>${ratings['Authentic']}</td>
-        <td>${ratings['Calm']}</td>
-        <td>${ratings['Focused']}</td>
+        <td>${ratings['Engaging Tone']}</td>
         <td>${ratings['Structured Answers']}</td>
+        <td>${ratings['Calm']}</td>
         <td>${ratings['Not Stressed']}</td>
+        <td>${ratings['Focused']}</td>
+        <td>${ratings['Authentic']}</td>
         <td>${ratings['Not Awkward']}</td>
-        <td>${calculateScore(ratings)}</td> <!-- New column for score -->
+        <td>${ratings['Total']}</td>
     `;
     tableBody.appendChild(tableRow);
 
     // Display Score Digits
     displayDigits(ratings, digitsContainerId);
-}
-
-// Function to calculate score (example calculation)
-function calculateScore(ratings) {
-    // Example calculation: sum of selected ratings
-    return ratings['Overall'] + ratings['Engaged'] + ratings['Focused'];
 }
 
 // Function to display individual score digits
@@ -84,7 +80,7 @@ function displayDigits(ratings, containerId) {
     digitsContainer.innerHTML = ''; // Clear previous data
 
     Object.keys(ratings).forEach(key => {
-        if (key !== 'Participant') {
+        if (key !== 'Participant' && key !== 'Total') {
             let digitDiv = document.createElement('div');
             digitDiv.classList.add('score-digit');
             digitDiv.textContent = ratings[key];
