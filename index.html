@@ -15,6 +15,17 @@
             padding: 8px;
             text-align: center;
         }
+        .score-digits {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .score-digit {
+            border: 1px solid #ddd;
+            padding: 5px;
+            width: 30px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +61,7 @@
         </thead>
         <tbody id="groundTruthBody"></tbody>
     </table>
+    <div id="groundTruthDigits" class="score-digits"></div>
 
     <h3>GPT-4o Ratings</h3>
     <table id="gpt4oTable">
@@ -76,6 +88,7 @@
         </thead>
         <tbody id="gpt4oBody"></tbody>
     </table>
+    <div id="gpt4oDigits" class="score-digits"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="script.js"></script>
