@@ -1,0 +1,23 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.conversation {
+  margin-top: 20px;
+}
+
+.chunk {
+  margin-bottom: 10px;
+}
+
+.trait {
+  margin-bottom: 15px;
+}
+
+.success-message {
+  margin-top: 20px;
+  color: green;
+}
