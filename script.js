@@ -5,99 +5,78 @@ document.getElementById('participantForm').addEventListener('submit', function(e
     let participantName = document.getElementById('participantName').value.trim();
 
     // Fetch Ground Truth Ratings
-    fetch('MITdataset/groundTruthRatings.json') // Adjust the path to your JSON file
+    fetch('GroundTruth.json') // Adjust the path to your JSON file
         .then(response => response.json())
-        .then(data => {
-            // Check if participant exists in ground truth ratings
-            if (participantName in data) {
-                let ratings = data[participantName];
+        .then(groundTruthData => {
+            // Fetch GPT-4o Ratings
+            fetch('GPT-4o.json') // Adjust the path to your JSON file
+                .then(response => response.json())
+                .then(gpt4oData => {
+                    // Process data for the participant
+                    if (participantName in groundTruthData && participantName in gpt4oData) {
+                        let groundTruthRatings = groundTruthData[participantName];
+                        let gpt4oRatings = gpt4oData[participantName];
 
-                // Populate Ground Truth Table
-                let groundTruthBody = document.getElementById('groundTruthBody');
-                groundTruthBody.innerHTML = ''; // Clear previous data
+                        // Populate Ground Truth Table
+                        populateTable(groundTruthRatings, 'groundTruthTable', 'groundTruthDigits');
 
-                let groundTruthRow = document.createElement('tr');
-                groundTruthRow.innerHTML = `
-                    <td>${participantName}</td>
-                    <td>${ratings['Overall']}</td>
-                    <td>${ratings['Recommend Hiring']}</td>
-                    <td>${ratings['Engaged']}</td>
-                    <td>${ratings['Excited']}</td>
-                    <td>${ratings['Eye Contact']}</td>
-                    <td>${ratings['Smiled']}</td>
-                    <td>${ratings['Friendly']}</td>
-                    <td>${ratings['Speaking Rate']}</td>
-                    <td>${ratings['No Fillers']}</td>
-                    <td>${ratings['Paused']}</td>
-                    <td>${ratings['Authentic']}</td>
-                    <td>${ratings['Calm']}</td>
-                    <td>${ratings['Focused']}</td>
-                    <td>${ratings['Structured Answers']}</td>
-                    <td>${ratings['Not Stressed']}</td>
-                    <td>${ratings['Not Awkward']}</td>
-                `;
-                groundTruthBody.appendChild(groundTruthRow);
+                        // Populate GPT-4o Table
+                        populateTable(gpt4oRatings, 'gpt4oTable', 'gpt4oDigits');
 
-                // Display Ground Truth Ratings Digits
-                displayDigits(ratings, 'groundTruthDigits');
-
-            } else {
-                console.log(`Participant ${participantName} not found in ground truth ratings.`);
-                // Handle case where participant is not found
-            }
+                    } else {
+                        console.log(`Participant ${participantName} not found in ratings data.`);
+                        // Handle case where participant is not found in one or both datasets
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading GPT-4o ratings:', error);
+                    // Handle errors loading GPT-4o JSON file
+                });
         })
         .catch(error => {
             console.error('Error loading ground truth ratings:', error);
-            // Handle errors loading JSON file
-        });
-
-    // Fetch GPT-4o Ratings
-    fetch('MITdataset/gpt4oRatings.json') // Adjust the path to your JSON file
-        .then(response => response.json())
-        .then(data => {
-            // Check if participant exists in GPT-4o ratings
-            if (participantName in data) {
-                let ratings = data[participantName];
-
-                // Populate GPT-4o Table
-                let gpt4oBody = document.getElementById('gpt4oBody');
-                gpt4oBody.innerHTML = ''; // Clear previous data
-
-                let gpt4oRow = document.createElement('tr');
-                gpt4oRow.innerHTML = `
-                    <td>${participantName}</td>
-                    <td>${ratings['Overall']}</td>
-                    <td>${ratings['Recommend Hiring']}</td>
-                    <td>${ratings['Engaged']}</td>
-                    <td>${ratings['Excited']}</td>
-                    <td>${ratings['Eye Contact']}</td>
-                    <td>${ratings['Smiled']}</td>
-                    <td>${ratings['Friendly']}</td>
-                    <td>${ratings['Speaking Rate']}</td>
-                    <td>${ratings['No Fillers']}</td>
-                    <td>${ratings['Paused']}</td>
-                    <td>${ratings['Authentic']}</td>
-                    <td>${ratings['Calm']}</td>
-                    <td>${ratings['Focused']}</td>
-                    <td>${ratings['Structured Answers']}</td>
-                    <td>${ratings['Not Stressed']}</td>
-                    <td>${ratings['Not Awkward']}</td>
-                `;
-                gpt4oBody.appendChild(gpt4oRow);
-
-                // Display GPT-4o Ratings Digits
-                displayDigits(ratings, 'gpt4oDigits');
-
-            } else {
-                console.log(`Participant ${participantName} not found in GPT-4o ratings.`);
-                // Handle case where participant is not found
-            }
-        })
-        .catch(error => {
-            console.error('Error loading GPT-4o ratings:', error);
-            // Handle errors loading JSON file
+            // Handle errors loading ground truth JSON file
         });
 });
+
+// Function to populate table and score digits
+function populateTable(ratings, tableId, digitsContainerId) {
+    // Populate Table
+    let tableBody = document.getElementById(`${tableId}Body`);
+    tableBody.innerHTML = ''; // Clear previous data
+
+    let tableRow = document.createElement('tr');
+    tableRow.innerHTML = `
+        <td>${ratings['Participant']}</td>
+        <td>${ratings['Overall']}</td>
+        <td>${ratings['Recommend Hiring']}</td>
+        <td>${ratings['Engaged']}</td>
+        <td>${ratings['Excited']}</td>
+        <td>${ratings['Eye Contact']}</td>
+        <td>${ratings['Smiled']}</td>
+        <td>${ratings['Friendly']}</td>
+        <td>${ratings['Speaking Rate']}</td>
+        <td>${ratings['No Fillers']}</td>
+        <td>${ratings['Paused']}</td>
+        <td>${ratings['Authentic']}</td>
+        <td>${ratings['Calm']}</td>
+        <td>${ratings['Focused']}</td>
+        <td>${ratings['Structured Answers']}</td>
+        <td>${ratings['Not Stressed']}</td>
+        <td>${ratings['Not Awkward']}</td>
+        <td>${calculateScore(ratings)}</td> <!-- New column for score -->
+    `;
+    tableBody.appendChild(tableRow);
+
+    // Display Score Digits
+    displayDigits(ratings, digitsContainerId);
+}
+
+// Function to calculate score (example calculation)
+function calculateScore(ratings) {
+    // Example calculation: sum of selected ratings
+    return ratings['Overall'] + ratings['Engaged'] + ratings['Focused'];
+}
 
 // Function to display individual score digits
 function displayDigits(ratings, containerId) {
